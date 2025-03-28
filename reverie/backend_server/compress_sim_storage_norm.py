@@ -124,7 +124,7 @@ def run_gpt_prompt_pronunciatio_for_chat(action_description, persona, chat, exam
 def generate_action_pronunciatio_for_chat(act_desp, persona,chat,example): 
   """TODO 
   Given an action description, creates an emoji string description via a few
-  shot prompt. 
+  shot prompt.
 
   Does not really need any information from persona. 
 
