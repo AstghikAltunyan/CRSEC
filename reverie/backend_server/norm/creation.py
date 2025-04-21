@@ -1,3 +1,5 @@
+import os
+
 import openai
 import json
 import sys
@@ -74,6 +76,8 @@ def Create(rs):
 
                 response = create_bot.creation(usr_prompt, agent_description)
                 print(response)
+
+                os.makedirs(f"{fs_storage}/{rs.sim_code}/personas/{entrepreneur}/norms/")
                 
                 norm_seed_file = f"{fs_storage}/{rs.sim_code}/personas/{entrepreneur}/norms/personal_norm_database_validity.json"
                 with open(norm_seed_file, 'w', encoding='utf-8') as fw:
