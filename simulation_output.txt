@@ -1,0 +1,22 @@
+CRSEC Simulation Output Log - Fresh Start
+==========================================
+Started: August 20, 2025, 23:08:00
+
+This file captures:
+- Simulation startup messages
+- Warning messages when invalid addresses are generated
+- Error messages and debugging information
+- General simulation progress
+
+The simulation will write to this file when it encounters:
+- Invalid maze addresses (like 'the Ville:Giorgio Rossi's apartment:kitchen')
+- Fallback location usage
+- Arena validation warnings
+- Sector validation warnings
+
+==========================================
+
+[23:08:00] INFO: Fresh simulation started - KeyError fixes applied
+[23:08:00] INFO: Fallback mechanisms active for invalid addresses
+[23:08:00] INFO: Arena and sector validation enabled
+[23:08:00] INFO: Ready to start new simulation run

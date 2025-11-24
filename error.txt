@@ -1,0 +1,67 @@
+GNS FUNCTION: <generate_act_obj_event_triple>
+=== persona/prompt_template/v2/generate_event_triple_v1.txt
+~~~ persona    ---------------------------------------------------
+Sam Moore
+
+~~~ gpt_param ----------------------------------------------------
+{'engine': 'gpt-4.1-nano', 'max_tokens': 30, 'temperature': 0, 'top_p': 1, 'stream': False, 'frequency_penalty': 0, 'presence_penalty': 0, 'stop': ['\n']}
+
+~~~ prompt_input    ----------------------------------------------
+['<random>', 'engaged in lively conversations about the benefits of smoking and tipping, actively promoting community support at Hobbs Cafe with enthusiasm', '<random>']
+
+~~~ prompt    ----------------------------------------------------
+Task: Turn the input into (subject, predicate, object).
+
+Input: Sam Johnson is eating breakfast.
+Output: (Dolores Murphy, eat, breakfast)
+---
+Input: Joon Park is brewing coffee.
+Output: (Joon Park, brew, coffee)
+---
+Input: Jane Cook is sleeping.
+Output: (Jane Cook, is, sleep)
+---
+Input: Michael Bernstein is writing email on a computer.
+Output: (Michael Bernstein, write, email)
+---
+Input: Percy Liang is teaching students in a classroom.
+Output: (Percy Liang, teach, students)
+---
+Input: Merrie Morris is running on a treadmill.
+Output: (Merrie Morris, run, treadmill)
+---
+Input: <random> is engaged in lively conversations about the benefits of smoking and tipping, actively promoting community support at Hobbs Cafe with enthusiasm.
+Output: (<random>,
+
+~~~ output    ----------------------------------------------------
+('<random>', '<random>', 'is')
+
+=== END ==========================================================
+
+
+
+
+Sam Moore persona.scratch.importance_trigger_curr:: 164
+250
+Sam Moore persona.scratch.norm_importance_trigger_curr:: 38
+50
+aldhfoaf/????
+the Ville:Giorgio Rossi's apartment:kitchen:<random>
+Traceback (most recent call last):
+  File "/Users/astghikaltunyan/Dev/CRSEC/reverie/backend_server/reverie.py", line 529, in open_server
+    rs.start_server(int_count)
+  File "/Users/astghikaltunyan/Dev/CRSEC/reverie/backend_server/reverie.py", line 433, in start_server
+    next_tile, pronunciatio, description = persona.move(
+                                           ^^^^^^^^^^^^^
+  File "/Users/astghikaltunyan/Dev/CRSEC/reverie/backend_server/persona/persona.py", line 252, in move
+    return self.execute(maze, personas, plan)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/astghikaltunyan/Dev/CRSEC/reverie/backend_server/persona/persona.py", line 180, in execute
+    return execute(self, maze, personas, plan)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/astghikaltunyan/Dev/CRSEC/reverie/backend_server/persona/cognitive_modules/execute.py", line 82, in execute
+    target_tiles = maze.address_tiles[plan]
+                   ~~~~~~~~~~~~~~~~~~^^^^^^
+KeyError: "the Ville:Giorgio Rossi's apartment:kitchen"
+Error.
+Enter option:

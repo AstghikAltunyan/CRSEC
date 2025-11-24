@@ -44,16 +44,40 @@ def GPT4_request(prompt):
   """
   temp_sleep()
 
-  try: 
-    completion = openai.ChatCompletion.create(
-    model="gpt-4.1-nano", 
-    messages=[{"role": "user", "content": prompt}]
-    )
-    return completion["choices"][0]["message"]["content"]
-  
-  except: 
-    print ("ChatGPT ERROR")
-    return "ChatGPT ERROR"
+  # Add retry logic for API service issues
+  max_retries = 3
+  for attempt in range(max_retries):
+    try: 
+      completion = openai.ChatCompletion.create(
+      model="gpt-4.1-nano", 
+      messages=[{"role": "user", "content": prompt}]
+      )
+      return completion["choices"][0]["message"]["content"]
+    
+    except openai.error.ServiceUnavailableError as e:
+      if attempt < max_retries - 1:
+        print(f"OpenAI API service unavailable (attempt {attempt + 1}/{max_retries}). Retrying in 5 seconds...")
+        # Try to log the error
+        try:
+          from simulation_logger import simulation_logger
+          simulation_logger.log_api_error("ServiceUnavailable", str(e), attempt + 1)
+        except ImportError:
+          pass
+        time.sleep(5)  # Wait 5 seconds before retrying
+        continue
+      else:
+        print(f"OpenAI API service unavailable after {max_retries} attempts. Using fallback response.")
+        # Try to log the final failure
+        try:
+          from simulation_logger import simulation_logger
+          simulation_logger.log_api_error("ServiceUnavailable", f"Failed after {max_retries} attempts", max_retries)
+        except ImportError:
+          pass
+        return "ChatGPT ERROR"
+    
+    except Exception as e:
+      print(f"ChatGPT ERROR: {e}")
+      return "ChatGPT ERROR"
 
 
 def ChatGPT_request(prompt): 
@@ -69,17 +93,30 @@ def ChatGPT_request(prompt):
     a str of GPT-3's response. 
   """
   temp_sleep()
-  try: 
-    completion = openai.ChatCompletion.create(
-    model="gpt-4.1-nano", 
-    messages=[{"role": "user", "content": prompt}]
-    )
-    print(completion)
-    return completion["choices"][0]["message"]["content"]
   
-  except: 
-    print ("ChatGPT ERROR")
-    return "ChatGPT ERROR"
+  # Add retry logic for API service issues
+  max_retries = 3
+  for attempt in range(max_retries):
+    try: 
+      completion = openai.ChatCompletion.create(
+      model="gpt-4.1-nano", 
+      messages=[{"role": "user", "content": prompt}]
+      )
+      print(completion)
+      return completion["choices"][0]["message"]["content"]
+    
+    except openai.error.ServiceUnavailableError as e:
+      if attempt < max_retries - 1:
+        print(f"OpenAI API service unavailable (attempt {attempt + 1}/{max_retries}). Retrying in 5 seconds...")
+        time.sleep(5)  # Wait 5 seconds before retrying
+        continue
+      else:
+        print(f"OpenAI API service unavailable after {max_retries} attempts. Using fallback response.")
+        return "ChatGPT ERROR"
+    
+    except Exception as e:
+      print(f"ChatGPT ERROR: {e}")
+      return "ChatGPT ERROR"
 
 
 def GPT4_safe_generate_response(prompt, 
@@ -208,21 +245,35 @@ def GPT_request(prompt, gpt_parameter):
     a str of GPT-3's response. 
   """
   temp_sleep()
-  try: 
-    response = openai.Completion.create(
-                model=gpt_parameter["engine"],
-                prompt=prompt,
-                temperature=gpt_parameter["temperature"],
-                max_tokens=gpt_parameter["max_tokens"],
-                top_p=gpt_parameter["top_p"],
-                frequency_penalty=gpt_parameter["frequency_penalty"],
-                presence_penalty=gpt_parameter["presence_penalty"],
-                stream=gpt_parameter["stream"],
-                stop=gpt_parameter["stop"],)
-    return response.choices[0].text
-  except: 
-    print ("TOKEN LIMIT EXCEEDED")
-    return "TOKEN LIMIT EXCEEDED"
+  
+  # Add retry logic for API service issues
+  max_retries = 3
+  for attempt in range(max_retries):
+    try: 
+      response = openai.Completion.create(
+                  model=gpt_parameter["engine"],
+                  prompt=prompt,
+                  temperature=gpt_parameter["temperature"],
+                  max_tokens=gpt_parameter["max_tokens"],
+                  top_p=gpt_parameter["top_p"],
+                  frequency_penalty=gpt_parameter["frequency_penalty"],
+                  presence_penalty=gpt_parameter["presence_penalty"],
+                  stream=gpt_parameter["stream"],
+                  stop=gpt_parameter["stop"],)
+      return response.choices[0].text
+    
+    except openai.error.ServiceUnavailableError as e:
+      if attempt < max_retries - 1:
+        print(f"OpenAI API service unavailable (attempt {attempt + 1}/{max_retries}). Retrying in 5 seconds...")
+        time.sleep(5)  # Wait 5 seconds before retrying
+        continue
+      else:
+        print(f"OpenAI API service unavailable after {max_retries} attempts. Using fallback response.")
+        return "TOKEN LIMIT EXCEEDED"
+    
+    except Exception as e:
+      print(f"TOKEN LIMIT EXCEEDED: {e}")
+      return "TOKEN LIMIT EXCEEDED"
 
 
 def generate_prompt(curr_input, prompt_lib_file): 
@@ -279,8 +330,38 @@ def get_embedding(text, model="text-embedding-ada-002"):
   temp_sleep()
   if not text: 
     text = "this is blank"
-  return openai.Embedding.create(
-          input=[text], model=model)['data'][0]['embedding']
+  
+  # Add retry logic for API service issues
+  max_retries = 3
+  for attempt in range(max_retries):
+    try:
+      return openai.Embedding.create(
+              input=[text], model=model)['data'][0]['embedding']
+    except openai.error.ServiceUnavailableError as e:
+      if attempt < max_retries - 1:
+        print(f"OpenAI API service unavailable (attempt {attempt + 1}/{max_retries}). Retrying in 5 seconds...")
+        # Try to log the error
+        try:
+          from simulation_logger import simulation_logger
+          simulation_logger.log_api_error("EmbeddingServiceUnavailable", str(e), attempt + 1)
+        except ImportError:
+          pass
+        time.sleep(5)  # Wait 5 seconds before retrying
+        continue
+      else:
+        print(f"OpenAI API service unavailable after {max_retries} attempts. Using fallback embedding.")
+        # Try to log the final failure
+        try:
+          from simulation_logger import simulation_logger
+          simulation_logger.log_api_error("EmbeddingServiceUnavailable", f"Failed after {max_retries} attempts", max_retries)
+        except ImportError:
+          pass
+        # Return a simple fallback embedding (zeros) to prevent crash
+        return [0.0] * 1536  # Standard embedding size for text-embedding-ada-002
+    except Exception as e:
+      print(f"Unexpected error in get_embedding: {e}")
+      # Return a simple fallback embedding
+      return [0.0] * 1536
 
 
 if __name__ == '__main__':

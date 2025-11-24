@@ -836,12 +836,21 @@ def run_gpt_prompt_action_sector(action_description,
     output = safe_generate_response(prompt, gpt_param, 5, fail_safe,
                                     __func_validate, __func_clean_up)
     y = f"{maze.access_tile(persona.scratch.curr_tile)['world']}"
-    x = [i.strip() for i in persona.s_mem.get_str_accessible_sectors(y).split(",")]
-    if output not in x:
-        # output = random.choice(x)
+    available_sectors = [i.strip() for i in persona.s_mem.get_str_accessible_sectors(y).split(",")]
+    if output not in available_sectors:
+        # Try to import logger
+        try:
+            from simulation_logger import simulation_logger
+            fallback_sector = persona.scratch.living_area.split(":")[1]
+            simulation_logger.log_sector_validation(output, available_sectors, fallback_sector)
+        except ImportError:
+            print(f"WARNING: Generated sector '{output}' not found in available sectors: {available_sectors}")
+        
+        # Use the persona's living area as fallback
         output = persona.scratch.living_area.split(":")[1]
+        print(f"Using fallback sector: {output}")
 
-    print("DEBUG", random.choice(x), "------", output)
+    print("DEBUG", random.choice(available_sectors), "------", output)
 
     if debug or verbose:
         print_run_prompts(prompt_template, persona, gpt_param,
@@ -927,10 +936,27 @@ def run_gpt_prompt_action_arena(action_description,
     output = safe_generate_response(prompt, gpt_param, 5, fail_safe,
                                     __func_validate, __func_clean_up)
     print(output)
-    # y = f"{act_world}:{act_sector}"
-    # x = [i.strip() for i in persona.s_mem.get_str_accessible_sector_arenas(y).split(",")]
-    # if output not in x:
-    #   output = random.choice(x)
+    
+    # Validate that the generated arena actually exists in the maze
+    y = f"{act_world}:{act_sector}"
+    available_arenas = [i.strip() for i in persona.s_mem.get_str_accessible_sector_arenas(y).split(",")]
+    if output not in available_arenas:
+        # Try to import logger
+        try:
+            from simulation_logger import simulation_logger
+            fallback_arena = random.choice(available_arenas) if available_arenas else fail_safe
+            simulation_logger.log_arena_validation(output, available_arenas, fallback_arena)
+        except ImportError:
+            print(f"WARNING: Generated arena '{output}' not found in available arenas: {available_arenas}")
+        
+        # Use a fallback arena that exists
+        if available_arenas:
+            output = random.choice(available_arenas)
+            print(f"Using fallback arena: {output}")
+        else:
+            # If no arenas available, use the fail_safe
+            output = fail_safe
+            print(f"No available arenas found, using fail_safe: {output}")
 
     if debug or verbose:
         print_run_prompts(prompt_template, persona, gpt_param,

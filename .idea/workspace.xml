@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="29d2d536-ef67-466c-bb23-f0ab4aa8bdd9" name="Changes" comment="Update UI files">
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/environment/frontend_server/storage/base_the_ville_n10/personas/Abigail Chen/bootstrap_memory/scratch.json" beforeDir="false" afterPath="$PROJECT_DIR$/environment/frontend_server/storage/base_the_ville_n10/personas/Abigail Chen/bootstrap_memory/scratch.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/environment/frontend_server/storage/base_the_ville_n10/personas/Bob Johnson/bootstrap_memory/scratch.json" beforeDir="false" afterPath="$PROJECT_DIR$/environment/frontend_server/storage/base_the_ville_n10/personas/Bob Johnson/bootstrap_memory/scratch.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/environment/frontend_server/storage/base_the_ville_n10/personas/Carlos Gomez/bootstrap_memory/scratch.json" beforeDir="false" afterPath="$PROJECT_DIR$/environment/frontend_server/storage/base_the_ville_n10/personas/Carlos Gomez/bootstrap_memory/scratch.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/environment/frontend_server/storage/base_the_ville_n10/personas/Francisco Lopez/bootstrap_memory/scratch.json" beforeDir="false" afterPath="$PROJECT_DIR$/environment/frontend_server/storage/base_the_ville_n10/personas/Francisco Lopez/bootstrap_memory/scratch.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/environment/frontend_server/storage/base_the_ville_n10/personas/Isabella Rodriguez/bootstrap_memory/scratch.json" beforeDir="false" afterPath="$PROJECT_DIR$/environment/frontend_server/storage/base_the_ville_n10/personas/Isabella Rodriguez/bootstrap_memory/scratch.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/environment/frontend_server/storage/base_the_ville_n10/personas/Jennifer Moore/bootstrap_memory/scratch.json" beforeDir="false" afterPath="$PROJECT_DIR$/environment/frontend_server/storage/base_the_ville_n10/personas/Jennifer Moore/bootstrap_memory/scratch.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/environment/frontend_server/storage/base_the_ville_n10/personas/Sam Moore/bootstrap_memory/scratch.json" beforeDir="false" afterPath="$PROJECT_DIR$/environment/frontend_server/storage/base_the_ville_n10/personas/Sam Moore/bootstrap_memory/scratch.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/environment/frontend_server/storage/base_the_ville_n10/personas/Tamara Rodriguez/bootstrap_memory/scratch.json" beforeDir="false" afterPath="$PROJECT_DIR$/environment/frontend_server/storage/base_the_ville_n10/personas/Tamara Rodriguez/bootstrap_memory/scratch.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/environment/frontend_server/storage/base_the_ville_n10/personas/Tom Gomez/bootstrap_memory/scratch.json" beforeDir="false" afterPath="$PROJECT_DIR$/environment/frontend_server/storage/base_the_ville_n10/personas/Tom Gomez/bootstrap_memory/scratch.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/environment/frontend_server/storage/base_the_ville_n10/personas/Wolfgang Schulz/bootstrap_memory/scratch.json" beforeDir="false" afterPath="$PROJECT_DIR$/environment/frontend_server/storage/base_the_ville_n10/personas/Wolfgang Schulz/bootstrap_memory/scratch.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/environment/frontend_server/temp_storage/curr_sim_code.json" beforeDir="false" afterPath="$PROJECT_DIR$/environment/frontend_server/temp_storage/curr_sim_code.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/reverie/backend_server/persona/cognitive_modules/execute.py" beforeDir="false" afterPath="$PROJECT_DIR$/reverie/backend_server/persona/cognitive_modules/execute.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/reverie/backend_server/persona/prompt_template/gpt_structure.py" beforeDir="false" afterPath="$PROJECT_DIR$/reverie/backend_server/persona/prompt_template/gpt_structure.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/reverie/backend_server/persona/prompt_template/run_gpt_prompt.py" beforeDir="false" afterPath="$PROJECT_DIR$/reverie/backend_server/persona/prompt_template/run_gpt_prompt.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/reverie/backend_server/reverie.py" beforeDir="false" afterPath="$PROJECT_DIR$/reverie/backend_server/reverie.py" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectId" id="2w3KuZ9yPP6KA0uaMcvZSoo0cxE" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/astghikaltunyan/Dev/CRSEC&quot;
+  }
+}</component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="29d2d536-ef67-466c-bb23-f0ab4aa8bdd9" name="Changes" comment="" />
+      <created>1745265043324</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1745265043324</updated>
+    </task>
+    <task id="LOCAL-00001" summary="Update UI files">
+      <created>1745269309550</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1745269309550</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
+    <servers />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Update UI files" />
+    <option name="LAST_COMMIT_MESSAGE" value="Update UI files" />
+  </component>
+</project>

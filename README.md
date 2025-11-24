@@ -47,7 +47,7 @@ To run a new simulation, you will need to concurrently start two servers: the en
 
 ### Step 1. Starting the Environment Server
 
-Again, the environment is implemented as a Django project, and as such, you will need to start the Django server. To do this, first navigate to `environment/frontend_server` (this is where `manage.py` is located) in your command line. Then run the following command:
+Again, the environment is implemented as a Django project, and as such, you will need to start the Django server. To do this, first navigate to `evironment/frontend_servern` (this is where `manage.py` is located) in your command line. Then run the following command:
 
     python manage.py runserver
 

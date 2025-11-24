@@ -44,6 +44,9 @@ def execute(persona, maze, personas, plan):
 
     print ('aldhfoaf/????')
     print (plan)
+    print (f"Persona: {persona.scratch.name}")
+    print (f"Current tile: {persona.scratch.curr_tile}")
+    print (f"Available addresses in maze: {list(maze.address_tiles.keys())[:10]}...")  # Show first 10 for debugging
 
     if "<persona>" in plan: 
       # Executing persona-persona interaction.
@@ -79,7 +82,42 @@ def execute(persona, maze, personas, plan):
     elif "<random>" in plan: 
       # Executing a random location action.
       plan = ":".join(plan.split(":")[:-1])
-      target_tiles = maze.address_tiles[plan]
+      
+      # Check if the processed plan exists in maze.address_tiles
+      if plan not in maze.address_tiles:
+        # Try to find a suitable fallback location
+        fallback_locations = [
+          "the Ville:Johnson Park:park:park garden",
+          "the Ville:artist's co-living space:kitchen",
+          "the Ville:Dorm for Oak Hill College:kitchen",
+          "the Ville:Tamara Rodriguez and Carmen Ortiz's house:kitchen",
+          "the Ville:Gomez family's house:kitchen",
+          "the Ville:Lin family's house:kitchen"
+        ]
+        
+        target_tiles = None
+        for fallback in fallback_locations:
+          if fallback in maze.address_tiles:
+            target_tiles = maze.address_tiles[fallback]
+            try:
+              from simulation_logger import simulation_logger
+              simulation_logger.log_fallback_usage(plan, fallback)
+            except ImportError:
+              print(f"WARNING: Random plan '{plan}' not found in maze.address_tiles. Using fallback: {fallback}")
+            break
+        
+        if target_tiles is None:
+          # If no fallback works, use the first available address
+          first_available = list(maze.address_tiles.keys())[0]
+          target_tiles = maze.address_tiles[first_available]
+          try:
+            from simulation_logger import simulation_logger
+            simulation_logger.log_warning(f"No fallback location found for random plan. Using first available: {first_available}")
+          except ImportError:
+            print(f"CRITICAL: No fallback location found for random plan. Using first available: {first_available}")
+      else:
+        target_tiles = maze.address_tiles[plan]
+      
       target_tiles = random.sample(list(target_tiles), 1)
 
     else: 
@@ -89,7 +127,37 @@ def execute(persona, maze, personas, plan):
       # string form. <maze.address_tiles> takes this and returns candidate 
       # coordinates. 
       if plan not in maze.address_tiles: 
-        target_tiles = maze.address_tiles["the Ville:Johnson Park:park:park garden"] #ERRORRRRRRR
+        # Try to find a suitable fallback location
+        fallback_locations = [
+          "the Ville:Johnson Park:park:park garden",
+          "the Ville:artist's co-living space:kitchen",
+          "the Ville:Dorm for Oak Hill College:kitchen",
+          "the Ville:Tamara Rodriguez and Carmen Ortiz's house:kitchen",
+          "the Ville:Gomez family's house:kitchen",
+          "the Ville:Lin family's house:kitchen"
+        ]
+        
+        target_tiles = None
+        for fallback in fallback_locations:
+          if fallback in maze.address_tiles:
+            target_tiles = maze.address_tiles[fallback]
+            # Import logger if not already imported
+            try:
+              from simulation_logger import simulation_logger
+              simulation_logger.log_fallback_usage(plan, fallback)
+            except ImportError:
+              print(f"WARNING: Plan '{plan}' not found in maze.address_tiles. Using fallback: {fallback}")
+            break
+        
+        if target_tiles is None:
+          # If no fallback works, use the first available address
+          first_available = list(maze.address_tiles.keys())[0]
+          target_tiles = maze.address_tiles[first_available]
+          try:
+            from simulation_logger import simulation_logger
+            simulation_logger.log_warning(f"No fallback location found. Using first available: {first_available}")
+          except ImportError:
+            print(f"CRITICAL: No fallback location found. Using first available: {first_available}")
       else: 
         target_tiles = maze.address_tiles[plan]
 

@@ -27,6 +27,7 @@ import math
 import os
 import shutil
 import traceback
+import openai
 
 from selenium import webdriver
 
@@ -39,6 +40,7 @@ from norm.creation import *
 from norm.norm_save import *
 from norm.norm_evaluate import *
 from environment_manager import create_environment_manager
+from simulation_logger import start_simulation_logging, stop_simulation_logging, simulation_logger
 
 ##############################################################################
 #                                  REVERIE                                   #
@@ -218,6 +220,9 @@ class ReverieServer:
     OUTPUT 
       None
     """
+    # Start simulation logging
+    start_simulation_logging()
+    
     print(f"Running simulation in standalone mode for {steps} steps...")
     print(f"Simulation: {self.sim_code}")
     print(f"Current step: {self.step}")
@@ -229,11 +234,33 @@ class ReverieServer:
       print("Generating initial environment file...")
       self.env_manager.generate_environment_file(self.step)
     
-    # Run the simulation
-    self.start_server(steps)
-    
-    print(f"Simulation completed. Final step: {self.step}")
-    print(f"Final time: {self.curr_time.strftime('%B %d, %Y, %H:%M:%S')}")
+    try:
+      # Run the simulation
+      self.start_server(steps)
+      
+      print(f"Simulation completed. Final step: {self.step}")
+      print(f"Final time: {self.curr_time.strftime('%B %d, %Y, %H:%M:%S')}")
+    except openai.error.ServiceUnavailableError as e:
+      simulation_logger.log_error(f"OpenAI API service unavailable: {str(e)}")
+      simulation_logger.log_error("Simulation will pause for 30 seconds and retry...")
+      print(f"OpenAI API service unavailable: {str(e)}")
+      print("Simulation will pause for 30 seconds and retry...")
+      time.sleep(30)  # Wait 30 seconds
+      # Try to continue the simulation
+      try:
+        self.start_server(steps)
+        print(f"Simulation completed after retry. Final step: {self.step}")
+        print(f"Final time: {self.curr_time.strftime('%B %d, %Y, %H:%M:%S')}")
+      except Exception as retry_e:
+        simulation_logger.log_error(f"Simulation failed after retry: {str(retry_e)}")
+        raise
+    except Exception as e:
+      simulation_logger.log_error(f"Simulation crashed: {str(e)}")
+      simulation_logger.log_error(f"Traceback: {traceback.format_exc()}")
+      raise
+    finally:
+      # Stop simulation logging
+      stop_simulation_logging()
 
 
   def start_path_tester_server(self): 
@@ -467,6 +494,13 @@ class ReverieServer:
           self.step += 1
           self.curr_time += datetime.timedelta(seconds=self.sec_per_step)
 
+          # Log progress every 100 steps
+          if self.step % 100 == 0:
+            try:
+              simulation_logger.log_info(f"Step {self.step}: Simulation time is {self.curr_time.strftime('%B %d, %Y, %H:%M:%S')}")
+            except:
+              pass  # Don't crash if logging fails
+
           int_counter -= 1
           
       # Sleep so we don't burn our machines. 
@@ -483,6 +517,9 @@ class ReverieServer:
     OUTPUT
       None
     """
+    # Start simulation logging
+    start_simulation_logging()
+    
     print ("Note: The agents in this simulation package are computational")
     print ("constructs powered by generative agents architecture and LLM. We")
     print ("clarify that these agents lack human-like agency, consciousness,")
@@ -500,7 +537,9 @@ class ReverieServer:
         if sim_command.lower() in ["f", "fin", "finish", "save and finish"]: 
           # Finishes the simulation environment and saves the progress. 
           # Example: fin
+          simulation_logger.log_info("Saving and finishing simulation")
           self.save()
+          stop_simulation_logging()
           break
 
         elif sim_command.lower() == "start path tester mode": 
@@ -514,19 +553,29 @@ class ReverieServer:
           # Finishes the simulation environment but does not save the progress
           # and erases all saved data from current simulation. 
           # Example: exit 
+          simulation_logger.log_warning("Exiting simulation without saving - all data will be lost!")
           shutil.rmtree(sim_folder) 
+          stop_simulation_logging()
           break 
 
         elif sim_command.lower() == "save": 
           # Saves the current simulation progress. 
           # Example: save
+          simulation_logger.log_info("Saving simulation progress")
           self.save()
 
         elif sim_command[:3].lower() == "run": 
           # Runs the number of steps specified in the prompt.
           # Example: run 1000
           int_count = int(sim_command.split()[-1])
-          rs.start_server(int_count)
+          simulation_logger.log_info(f"Starting simulation run for {int_count} steps")
+          try:
+            self.start_server(int_count)
+            simulation_logger.log_info(f"Completed simulation run for {int_count} steps")
+          except Exception as e:
+            simulation_logger.log_error(f"Simulation run failed: {str(e)}")
+            simulation_logger.log_error(f"Traceback: {traceback.format_exc()}")
+            raise
 
         elif ("print persona schedule" 
               in sim_command[:22].lower()): 
