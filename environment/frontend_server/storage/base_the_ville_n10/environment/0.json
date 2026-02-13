@@ -1,30 +1,30 @@
 {
-  "Abigail Chen": {
+  "Mary Smith": {
     "maze": "the_ville",
     "x": 74,
     "y": 23
   },
-  "Francisco Lopez": {
+  "David Evans": {
     "maze": "the_ville",
     "x": 79,
     "y": 23
   },
-  "Carlos Gomez": {
+  "Robert Brown": {
     "maze": "the_ville",
     "x": 79,
     "y": 25
   },
-  "Wolfgang Schulz": {
+  "Andrew Williams": {
     "maze": "the_ville",
     "x": 80,
     "y": 21
   },
-  "Tom Gomez": {
+  "Tom Brown": {
     "maze": "the_ville",
     "x": 76,
     "y": 23
   },
-  "Tamara Rodriguez": {
+  "Sarah Taylor": {
     "maze": "the_ville",
     "x": 76,
     "y": 25
@@ -34,7 +34,7 @@
     "x": 78,
     "y": 19
   }, 
-  "Isabella Rodriguez": {
+  "Linda Taylor": {
     "maze": "the_ville",
     "x": 78,
     "y": 21

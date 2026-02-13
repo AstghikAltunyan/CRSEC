@@ -5,15 +5,15 @@
   "sec_per_step": 10,
   "maze_name": "the_ville",
   "persona_names": [
-    "Abigail Chen",
-    "Francisco Lopez",
-    "Carlos Gomez", 
-    "Wolfgang Schulz", 
-    "Tom Gomez", 
-    "Tamara Rodriguez", 
+    "Mary Smith",
+    "David Evans",
+    "Robert Brown", 
+    "Andrew Williams", 
+    "Tom Brown", 
+    "Sarah Taylor", 
     "Sam Moore", 
     "Jennifer Moore", 
-    "Isabella Rodriguez", 
+    "Linda Taylor", 
     "Bob Johnson" 
   ],
   "step": 0

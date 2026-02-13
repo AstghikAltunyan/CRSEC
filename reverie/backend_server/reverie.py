@@ -482,6 +482,41 @@ class ReverieServer:
           with open(curr_move_file, "w") as outfile: 
             outfile.write(json.dumps(movements, indent=2))
 
+          # Extract non-null chat logs to conversations_extracted.txt (once per conversation per step)
+          try:
+            chat_log_path = os.path.join(sim_folder, "conversations_extracted.txt")
+            seen_pairs = set()
+            curr_time_str = movements.get("meta", {}).get("curr_time", "")
+            for pname, pdata in movements.get("persona", {}).items():
+              chat = pdata.get("chat") if isinstance(pdata, dict) else None
+              if not chat or len(chat) < 2:
+                continue
+              pair = tuple(sorted([chat[0][0], chat[1][0]]))
+              if pair in seen_pairs:
+                continue
+              seen_pairs.add(pair)
+              line_sep = "\n"
+              block = (
+                line_sep + "=" * 60 + line_sep
+                + f"Step {self.step}  |  {curr_time_str}" + line_sep
+                + f"CONVERSATION: {chat[0][0]} & {chat[1][0]}" + line_sep
+                + "=" * 60 + line_sep
+                + line_sep.join(f"{s}: {u}" for s, u in chat)
+                + line_sep
+              )
+              with open(chat_log_path, "a") as cf:
+                if self.step == 0 and len(seen_pairs) == 1:
+                  header = (
+                    "EXTRACTED CONVERSATIONS (live run)\n"
+                    + "=" * 60 + line_sep
+                    + f"Simulation: {self.sim_code}" + line_sep
+                    + "=" * 60 + line_sep
+                  )
+                  cf.write(header)
+                cf.write(block)
+          except Exception:
+            pass  # don't fail the simulation if chat log write fails
+
           # Update environment manager with new positions for next iteration
           for persona_name, persona_data in movements["persona"].items():
             if "movement" in persona_data:

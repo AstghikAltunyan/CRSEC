@@ -5,22 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="29d2d536-ef67-466c-bb23-f0ab4aa8bdd9" name="Changes" comment="Update UI files">
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/environment/frontend_server/storage/base_the_ville_n10/personas/Abigail Chen/bootstrap_memory/scratch.json" beforeDir="false" afterPath="$PROJECT_DIR$/environment/frontend_server/storage/base_the_ville_n10/personas/Abigail Chen/bootstrap_memory/scratch.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/environment/frontend_server/storage/base_the_ville_n10/personas/Bob Johnson/bootstrap_memory/scratch.json" beforeDir="false" afterPath="$PROJECT_DIR$/environment/frontend_server/storage/base_the_ville_n10/personas/Bob Johnson/bootstrap_memory/scratch.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/environment/frontend_server/storage/base_the_ville_n10/personas/Carlos Gomez/bootstrap_memory/scratch.json" beforeDir="false" afterPath="$PROJECT_DIR$/environment/frontend_server/storage/base_the_ville_n10/personas/Carlos Gomez/bootstrap_memory/scratch.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/environment/frontend_server/storage/base_the_ville_n10/personas/Francisco Lopez/bootstrap_memory/scratch.json" beforeDir="false" afterPath="$PROJECT_DIR$/environment/frontend_server/storage/base_the_ville_n10/personas/Francisco Lopez/bootstrap_memory/scratch.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/environment/frontend_server/storage/base_the_ville_n10/personas/Isabella Rodriguez/bootstrap_memory/scratch.json" beforeDir="false" afterPath="$PROJECT_DIR$/environment/frontend_server/storage/base_the_ville_n10/personas/Isabella Rodriguez/bootstrap_memory/scratch.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/environment/frontend_server/storage/base_the_ville_n10/personas/Jennifer Moore/bootstrap_memory/scratch.json" beforeDir="false" afterPath="$PROJECT_DIR$/environment/frontend_server/storage/base_the_ville_n10/personas/Jennifer Moore/bootstrap_memory/scratch.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/environment/frontend_server/storage/base_the_ville_n10/personas/Sam Moore/bootstrap_memory/scratch.json" beforeDir="false" afterPath="$PROJECT_DIR$/environment/frontend_server/storage/base_the_ville_n10/personas/Sam Moore/bootstrap_memory/scratch.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/environment/frontend_server/storage/base_the_ville_n10/personas/Tamara Rodriguez/bootstrap_memory/scratch.json" beforeDir="false" afterPath="$PROJECT_DIR$/environment/frontend_server/storage/base_the_ville_n10/personas/Tamara Rodriguez/bootstrap_memory/scratch.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/environment/frontend_server/storage/base_the_ville_n10/personas/Tom Gomez/bootstrap_memory/scratch.json" beforeDir="false" afterPath="$PROJECT_DIR$/environment/frontend_server/storage/base_the_ville_n10/personas/Tom Gomez/bootstrap_memory/scratch.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/environment/frontend_server/storage/base_the_ville_n10/personas/Wolfgang Schulz/bootstrap_memory/scratch.json" beforeDir="false" afterPath="$PROJECT_DIR$/environment/frontend_server/storage/base_the_ville_n10/personas/Wolfgang Schulz/bootstrap_memory/scratch.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/environment/frontend_server/temp_storage/curr_sim_code.json" beforeDir="false" afterPath="$PROJECT_DIR$/environment/frontend_server/temp_storage/curr_sim_code.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/reverie/backend_server/persona/cognitive_modules/execute.py" beforeDir="false" afterPath="$PROJECT_DIR$/reverie/backend_server/persona/cognitive_modules/execute.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/reverie/backend_server/persona/prompt_template/gpt_structure.py" beforeDir="false" afterPath="$PROJECT_DIR$/reverie/backend_server/persona/prompt_template/gpt_structure.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/reverie/backend_server/persona/prompt_template/run_gpt_prompt.py" beforeDir="false" afterPath="$PROJECT_DIR$/reverie/backend_server/persona/prompt_template/run_gpt_prompt.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/reverie/backend_server/reverie.py" beforeDir="false" afterPath="$PROJECT_DIR$/reverie/backend_server/reverie.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/CRSEC.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/CRSEC.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/conversations_extracted.txt" beforeDir="false" afterPath="$PROJECT_DIR$/conversations_extracted.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

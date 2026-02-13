@@ -1,2 +1,5 @@
 environment/frontend_server/storage/*
 *.pyc
+
+# API key and local config - never commit
+reverie/backend_server/utils.py
