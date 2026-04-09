@@ -18,19 +18,20 @@ def norm_retrieve(persona, perceived):
 
 
 def generate_decide_if_norm_conflict(target_person_description, init_persona_norms, target_p, init_persona):
-    
-    x = run_gpt_prompt_decide_if_norm_conflict(target_person_description, init_persona_norms, target_p,
-                                               init_persona.scratch.identity, init_persona.scratch.innate)[0]
-    if debug: print("GNS FUNCTION: <generate_decide_if_norm_conflict>")
-    norm_check_file = "../../norm/norm_check.txt"
-    #with open(norm_check_file, 'a', encoding='utf-8') as fw:
-    #    fw.write(
-    print(f"init_person: {init_persona.scratch.name}")
-    print(f"target_person_description: {target_person_description}\ngenerate_decide_if_norm_conflict: {x}\nnorms: {init_persona_norms}\n\n")
-    #    pass
-    if x[0] == "yes":
-        return [True, x[1]]
-    else:
+    """Returns [True, gpt_response] if conversation needed, else [False, '']. Never raises."""
+    try:
+        x = run_gpt_prompt_decide_if_norm_conflict(target_person_description, init_persona_norms, target_p,
+                                                   init_persona.scratch.identity, init_persona.scratch.innate)[0]
+        if debug:
+            print("GNS FUNCTION: <generate_decide_if_norm_conflict>")
+        print(f"init_person: {init_persona.scratch.name}")
+        print(f"target_person_description: {target_person_description}\ngenerate_decide_if_norm_conflict: {x}\nnorms: {init_persona_norms}\n\n")
+        # Fail-safe returns list ["ERROR"]; normal return is [final_yes_no, gpt_response, conflict_yes_no]
+        if isinstance(x, list) and len(x) >= 1 and x[0] == "yes":
+            return [True, x[1] if len(x) > 1 else ""]
+        return [False, ""]
+    except Exception:
+        # Ensure simulation never crashes on norm conflict check; treat as no conversation
         return [False, ""]
 
 

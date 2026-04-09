@@ -46,59 +46,80 @@ from simulation_logger import start_simulation_logging, stop_simulation_logging,
 #                                  REVERIE                                   #
 ##############################################################################
 
+def _get_last_completed_step(sim_folder):
+  """Return the last step number that has a movement file, or -1 if none."""
+  movement_dir = os.path.join(sim_folder, "movement")
+  if not os.path.isdir(movement_dir):
+    return -1
+  steps = []
+  for f in os.listdir(movement_dir):
+    if f.endswith(".json"):
+      try:
+        steps.append(int(f.replace(".json", "")))
+      except ValueError:
+        pass
+  return max(steps) if steps else -1
+
+
 class ReverieServer: 
   def __init__(self, 
                fork_sim_code,
-               sim_code):
-    # FORKING FROM A PRIOR SIMULATION:
-    # <fork_sim_code> indicates the simulation we are forking from. 
-    # Interestingly, all simulations must be forked from some initial 
-    # simulation, where the first simulation is "hand-crafted".
-    self.fork_sim_code = fork_sim_code
-    fork_folder = f"{fs_storage}/{self.fork_sim_code}"
-
-    # <sim_code> indicates our current simulation. The first step here is to 
-    # copy everything that's in <fork_sim_code>, but edit its 
-    # reverie/meta/json's fork variable. 
+               sim_code,
+               resume=False):
+    # <sim_code> indicates our current simulation.
     self.sim_code = sim_code
     sim_folder = f"{fs_storage}/{self.sim_code}"
-    copyanything(fork_folder, sim_folder)
 
-    with open(f"{sim_folder}/reverie/meta.json") as json_file:  
-      reverie_meta = json.load(json_file)
+    if resume:
+      # RESUME: open existing simulation without copying. Infer step from movement files.
+      if not os.path.isdir(sim_folder):
+        raise FileNotFoundError(f"Cannot resume: simulation folder not found: {sim_folder}")
+      with open(f"{sim_folder}/reverie/meta.json") as json_file:
+        reverie_meta = json.load(json_file)
+      self.fork_sim_code = reverie_meta.get("fork_sim_code", "")
+      last_step = _get_last_completed_step(sim_folder)
+      if last_step < 0:
+        raise ValueError(f"Cannot resume: no movement files in {sim_folder}/movement/")
+      # Next step to run is last_step + 1
+      self.step = last_step + 1
+      reverie_meta["step"] = self.step
+      sec_per_step = reverie_meta['sec_per_step']
+      self.start_time = datetime.datetime.strptime(
+                          f"{reverie_meta['start_date']}, 00:00:00",
+                          "%B %d, %Y, %H:%M:%S")
+      self.curr_time = self.start_time + datetime.timedelta(seconds=(last_step + 1) * sec_per_step)
+      reverie_meta["curr_time"] = self.curr_time.strftime("%B %d, %Y, %H:%M:%S")
+      with open(f"{sim_folder}/reverie/meta.json", "w") as outfile:
+        outfile.write(json.dumps(reverie_meta, indent=2))
+      init_env_file = f"{sim_folder}/environment/{last_step}.json"
+      if not check_if_file_exists(init_env_file):
+        raise FileNotFoundError(f"Cannot resume: missing {init_env_file}")
+    else:
+      # FORKING FROM A PRIOR SIMULATION:
+      # <fork_sim_code> indicates the simulation we are forking from.
+      self.fork_sim_code = fork_sim_code
+      fork_folder = f"{fs_storage}/{self.fork_sim_code}"
+      copyanything(fork_folder, sim_folder)
 
-    with open(f"{sim_folder}/reverie/meta.json", "w") as outfile: 
-      reverie_meta["fork_sim_code"] = fork_sim_code
-      outfile.write(json.dumps(reverie_meta, indent=2))
+      with open(f"{sim_folder}/reverie/meta.json") as json_file:
+        reverie_meta = json.load(json_file)
 
-    # LOADING REVERIE'S GLOBAL VARIABLES
-    # The start datetime of the Reverie: 
-    # <start_datetime> is the datetime instance for the start datetime of 
-    # the Reverie instance. Once it is set, this is not really meant to 
-    # change. It takes a string date in the following example form: 
-    # "June 25, 2022"
-    # e.g., ...strptime(June 25, 2022, "%B %d, %Y")
-    self.start_time = datetime.datetime.strptime(
-                        f"{reverie_meta['start_date']}, 00:00:00",  
-                        "%B %d, %Y, %H:%M:%S")
-    # <curr_time> is the datetime instance that indicates the game's current
-    # time. This gets incremented by <sec_per_step> amount everytime the world
-    # progresses (that is, everytime curr_env_file is recieved). 
-    self.curr_time = datetime.datetime.strptime(reverie_meta['curr_time'], 
-                                                "%B %d, %Y, %H:%M:%S")
-    # <sec_per_step> denotes the number of seconds in game time that each 
-    # step moves foward. 
+      with open(f"{sim_folder}/reverie/meta.json", "w") as outfile:
+        reverie_meta["fork_sim_code"] = fork_sim_code
+        outfile.write(json.dumps(reverie_meta, indent=2))
+
+      self.step = reverie_meta['step']
+      self.start_time = datetime.datetime.strptime(
+                          f"{reverie_meta['start_date']}, 00:00:00",
+                          "%B %d, %Y, %H:%M:%S")
+      self.curr_time = datetime.datetime.strptime(reverie_meta['curr_time'],
+                                                  "%B %d, %Y, %H:%M:%S")
+      init_env_file = f"{sim_folder}/environment/{str(self.step)}.json"
+      sec_per_step = reverie_meta['sec_per_step']
+
+    # LOADING REVERIE'S GLOBAL VARIABLES (shared by both fork and resume)
     self.sec_per_step = reverie_meta['sec_per_step']
-    
-    # <maze> is the main Maze instance. Note that we pass in the maze_name
-    # (e.g., "double_studio") to instantiate Maze. 
-    # e.g., Maze("double_studio")
     self.maze = Maze(reverie_meta['maze_name'])
-    
-    # <step> denotes the number of steps that our game has taken. A step here
-    # literally translates to the number of moves our personas made in terms
-    # of the number of tiles. 
-    self.step = reverie_meta['step']
 
     # SETTING UP PERSONAS IN REVERIE
     # <personas> is a dictionary that takes the persona's full name as its 
@@ -381,7 +402,11 @@ class ReverieServer:
     # The main while loop of Reverie. 
     while (True): 
       # Done with this iteration if <int_counter> reaches 0. 
-      if int_counter == 0: 
+      if int_counter == 0:
+        try:
+          self.save()
+        except Exception:
+          pass
         break
 
       # STANDALONE ENVIRONMENT GENERATION:
@@ -528,6 +553,13 @@ class ReverieServer:
           # current time moves by <sec_per_step> amount. 
           self.step += 1
           self.curr_time += datetime.timedelta(seconds=self.sec_per_step)
+
+          # Persist state periodically so simulation can be resumed after interrupt
+          if self.step % 25 == 0:
+            try:
+              self.save()
+            except Exception:
+              pass  # Don't crash the run if save fails
 
           # Log progress every 100 steps
           if self.step % 100 == 0:
@@ -750,10 +782,18 @@ if __name__ == '__main__':
   #                    "July1_the_ville_isabella_maria_klaus-step-3-21")
   # rs.open_server()
 
-  origin = input("Enter the name of the forked simulation: ").strip()
-  target = input("Enter the name of the new simulation: ").strip()
-
-  rs = ReverieServer(origin, target)
+  choice = input("Resume existing simulation? (y/n): ").strip().lower()
+  if choice == "y" or choice == "yes":
+    target = input("Enter the simulation name to resume (e.g. test_4o_mini): ").strip()
+    if not target:
+      print("No name entered. Exiting.")
+      exit(1)
+    rs = ReverieServer(None, target, resume=True)
+    print(f"Resuming from step {rs.step} (time: {rs.curr_time.strftime('%B %d, %Y, %H:%M:%S')})")
+  else:
+    origin = input("Enter the name of the forked simulation: ").strip()
+    target = input("Enter the name of the new simulation: ").strip()
+    rs = ReverieServer(origin, target)
 
   Create(rs)
   rs.open_server()

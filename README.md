@@ -1,45 +1,35 @@
-# Emergence of Social Norms in Generative Agent Societies: Principles and Architecture
+## Tipping points in LLM-powered multi-agent systems: Stance on Climate change
 
-https://private-user-images.githubusercontent.com/115558821/352891287-7db61bb9-65b2-47c6-be4a-36a8896ad2e9.mp4
+We adopted the normative architecture from the following author's repository. In their normative architecture, certain agents (norm entrepreneurs) have more interest in influencing. We call those agents committed minority in our framework, but the agent architecture behind them is the same. 
 
 
+Authors and Citation
 
-***We are happy to announce that CRSEC has been accepted to HAI Special Track at IJCAI 2024!***
+**Authors:** Siyue Ren, Zhiyao Cui, Ruiqi Song, Zhen Wang, Shuyue Hu
 
-This repository is associated with our research paper titled "[Emergence of Social Norms in Generative Agent Societies: Principles and Architecture](https://www.ijcai.org/proceedings/2024/0874.pdf)" In this paper, we propose a novel agent architecture named CRSEC, consisting of four modules: Creation & Representation, Spreading, Evaluation, and Compliance, designed to facilitate the emergence of social norms within a generative agent society. This repository includes all four modules designed in our architecture and provides a replay for better understanding. We offer instructions for setting up the simulation environment on your local machine and for replaying the simulation as a demonstration animation. To access the full version of the demo, please refer to this [link](https://www.bilibili.com/video/BV1A142187EE). For supplementary materials, please refer to the following [arXiv link](https://arxiv.org/pdf/2403.08251).
+Please cite our paper if you use the code or data in this repository.
+
+```
+@inproceedings{ren2024emergence,
+  title={Emergence of Social Norms in Generative Agent Societies: Principles and Architecture,
+  author={Ren, Siyue and Cui, Zhiyao and Song, Ruiqi and Wang, Zhen and Hu, Shuyue},
+  booktitle={Proceedings of the 33rd International Joint Conference on Artificial Intelligence (IJCAI)},
+  year={2024}
+}
+```
 
 ## Setting Up the Environment 
 
-To set up your environment, you will need to generate a `utils.py` file that contains your OpenAI API key and download the necessary packages.
 
-### Step 1. Generate Utils File
-
-In the `reverie/backend_server` folder (where `reverie.py` is located), create a new file titled `utils.py` and copy and paste the content below into the file:
-
-```
-# Copy and paste your OpenAI API Key
-openai_api_key = "<Your OpenAI API>"
-# Put your name
-key_owner = "<Name>"
-
-maze_assets_loc = "../../environment/frontend_server/static_dirs/assets"
-env_matrix = f"{maze_assets_loc}/the_ville/matrix"
-env_visuals = f"{maze_assets_loc}/the_ville/visuals"
-
-fs_storage = "../../environment/frontend_server/storage"
-fs_temp_storage = "../../environment/frontend_server/temp_storage"
-
-collision_block_id = "32125"
-
-# Verbose 
-debug = True
-```
-
-Replace `<Your OpenAI API>` with your OpenAI API key, and `<name>` with your name.
-
-### Step 2. Install requirements.txt
+### Step 1. Install requirements.txt
 
 Install everything listed in the `requirements.txt` file (I strongly recommend first setting up a virtualenv as usual). A note on Python version: we tested our environment on Python 3.9.7. 
+
+### Step 2. Run initialization folder
+
+In this step the agent biographies and archetypes are randomized. Make sure to change in the `initialization.py` the amount of committed minority. Right now it is 2. 
+
+    python initialization.py
 
 ## Running a Simulation 
 
@@ -61,7 +51,7 @@ Open up another command line (the one you used in Step 1 should still be running
 
 This will start the simulation server. A command-line prompt will appear, asking the following: "Enter the name of the forked simulation: ". To start a 10-agent simulation without any initial norm, type the following:
 
-    base_the_ville_n10
+    
 
 The prompt will then ask, "Enter the name of the new simulation: ". Type any name to denote your current simulation (e.g., just "test-simulation" will do for now).
 
@@ -80,11 +70,11 @@ y
 n
 ```
 
-If you chose "y" in the last step, the prompt will then ask, "Enter the name of the entrepreneur: ". Type a name of an agent who's identify is  "entrepreneur". In our setup, there are 3 norm entrepreneurs: Abigail Chen, Bob Johnson and Francisco Lopez. Type the name of any one of them to complete a generation round.
+If you chose "y" in the last step, the prompt will then ask, "Enter the name of the entrepreneur: ". Type a name of an agent who's identify is  "entrepreneur". In our setup, this process was randomized, so you will need to check in the agent "biographies" after running the `initialization.py` who has become an entrepreneur. 
 
 ```
 # e.g.,
-Abigail Chen
+Mary Smith
 ```
 
 After completing norm generation, it will prompt "Regenerate norms? (y or n):" again. Type "y" to either generate norms for another entrepreneur or redo the generation for the current agent. When all norm generation is complete, type"n" to end this stage.
@@ -120,18 +110,4 @@ To start the demo, go to the following address on your browser: `http://localhos
 
 All simulations that you save will be located in `environment/frontend_server/storage`, and all compressed demos will be located in `environment/frontend_server/compressed_storage`. 
 
-## Authors and Citation
-
-**Authors:** Siyue Ren, Zhiyao Cui, Ruiqi Song, Zhen Wang, Shuyue Hu
-
-Please cite our paper if you use the code or data in this repository.
-
-```
-@inproceedings{ren2024emergence,
-  title={Emergence of Social Norms in Generative Agent Societies: Principles and Architecture,
-  author={Ren, Siyue and Cui, Zhiyao and Song, Ruiqi and Wang, Zhen and Hu, Shuyue},
-  booktitle={Proceedings of the 33rd International Joint Conference on Artificial Intelligence (IJCAI)},
-  year={2024}
-}
-```
 

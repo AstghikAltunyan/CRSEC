@@ -1,5 +1,11 @@
 environment/frontend_server/storage/*
 *.pyc
+.DS_Store
 
-# API key and local config - never commit
-reverie/backend_server/utils.py
+# Local secrets — never commit
+.env
+.env.local
+*.pem
+
+# Optional: local overrides (uncomment if you use a private local file)
+# reverie/backend_server/utils_local.py

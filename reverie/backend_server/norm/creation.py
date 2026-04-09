@@ -10,7 +10,7 @@ openai.api_key = openai_api_key
 
 
 class Creation:
-    def __init__(self, system_msg, model="gpt-4.1-mini", temprature=1, max_tokens=4096, top_p=1,
+    def __init__(self, system_msg, model="gpt-4o-mini", temprature=1, max_tokens=4096, top_p=1,
                  frequency_penalty=0, presence_penalty=0):
         # parameter
         self.msg = [{"role": "system", "content": system_msg}]

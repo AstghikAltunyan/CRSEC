@@ -1,0 +1,43 @@
+https://www.thelancet.com/journals/lanplh/article/PIIS2542-5196(24)00229-8/fulltext
+https://www.annualreviews.org/content/journals/10.1146/annurev-environ-012220-022716
+
+**Variable 1: Climate Urgency Conviction**
+Definition: The degree of certainty that climate change is an existential threat requiring immediate systemic intervention, characterized by a sense of temporal urgency, moral imperative, and perceived consequences of inaction.
+Scale: -1.0 (Dismissive/Fatalist), 0.0 (Agnostic/Moderate), 1.0 (Crisis/Alarm)
+* Narrative markers:
+	+ Dismissive/Fatalist: Uses phrases like "climate change is a natural phenomenon," "it's not a big deal," or "there's nothing we can do."
+	+ Agnostic/Moderate: Uses phrases like "climate change is a concern, but not a priority," "we should take some action, but not too much," or "it's a complex issue."
+	+ Crisis/Alarm: Uses phrases like "climate change is an existential threat," "we're running out of time," or "immediate action is necessary to avoid catastrophe."
+* Keywords: emergency, crisis, urgency, moral imperative, consequences, tipping point
+* Rhetorical styles: emotive language, catastrophizing, sense of urgency, emphasis on individual and collective responsibility
+**Variable 2: Institutional Trust**
+
+Definition: The belief in the integrity, competence, and capacity of formal government structures to manage the climate crisis, characterized by perceived effectiveness, transparency, and accountability.
+Scale: -1.0 (Systemic Cynic), 0.0 (Bureaucratic Pragmatist), 1.0 (Institutionalist)
+* Narrative markers:
+	+ Systemic Cynic: Uses phrases like "the system is corrupt," "governments are incompetent," or "they're just paying lip service."
+	+ Bureaucratic Pragmatist: Uses phrases like "the system is imperfect, but it's the best we have," "we need to work within the existing framework," or "it's a slow process, but we're making progress."
+	+ Institutionalist: Uses phrases like "our institutions are robust and effective," "governments are committed to addressing climate change," or "we can trust the system to deliver."
+* Keywords: governance, policy, regulation, accountability, transparency, effectiveness
+* Rhetorical styles: technocratic language, emphasis on expertise, faith in institutional capacity, focus on process and procedure
+**Vignettes and Internal Stances for the Four Archetypes:**
+1. **The Grassroot Activist (High Urgency, Low Trust)**
+Internal Stance: "The system is broken, and we need to take matters into our own hands. Climate change is an emergency, and we can't rely on governments to act quickly enough."
+Narrative markers: Uses phrases like "we need a revolution," "the people will rise up," or "we can't trust the system to save us."
+Keywords: activism, grassroots, social movement, direct action
+Rhetorical style: passionate, emotive, emphasis on individual and collective agency
+2. **The Institutional Optimist (High Urgency, High Trust)**
+Internal Stance: "We need to work with governments and institutions to address climate change. They have the expertise and resources to make a difference, and we can trust them to act in our best interests."
+Narrative markers: Uses phrases like "we're making progress," "governments are committed to climate action," or "we need to support our leaders in this effort."
+Keywords: governance, policy, cooperation, collaboration
+Rhetorical style: optimistic, collaborative, emphasis on institutional capacity and expertise
+3. **The Passive Conformist (Low Urgency, High Trust)**
+Internal Stance: "Climate change is a problem, but I'm sure the government and experts will figure it out. I'll just do my part and follow the rules."
+Narrative markers: Uses phrases like "I'm not an expert," "I trust the authorities to handle it," or "I'll just do what I'm told."
+Keywords: compliance, obedience, trust, faith in institutions
+Rhetorical style: deferential, submissive, emphasis on following rules and procedures
+4. **The Apathetic Cynic (Low Urgency, Low Trust)**
+Internal Stance: "Climate change is just a natural phenomenon, and there's nothing we can do about it. Governments are corrupt and incompetent, so why bother trying to make a difference?"
+Narrative markers: Uses phrases like "it's not a big deal," "there's nothing we can do," or "it's all just politics and corruption."
+Keywords: fatalism, cynicism, apathy, disengagement
+Rhetorical style: detached, dismissive, emphasis on individual powerlessness and institutional ineptitude

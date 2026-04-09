@@ -20,7 +20,7 @@ def ChatGPT_single_request(prompt):
   temp_sleep()
 
   completion = openai.ChatCompletion.create(
-    model="gpt-4.1-nano", 
+    model="gpt-4o-mini", 
     messages=[{"role": "user", "content": prompt}]
   )
   return completion["choices"][0]["message"]["content"]
@@ -49,7 +49,7 @@ def GPT4_request(prompt):
   for attempt in range(max_retries):
     try: 
       completion = openai.ChatCompletion.create(
-      model="gpt-4.1-nano", 
+      model="gpt-4o-mini", 
       messages=[{"role": "user", "content": prompt}]
       )
       return completion["choices"][0]["message"]["content"]
@@ -99,7 +99,7 @@ def ChatGPT_request(prompt):
   for attempt in range(max_retries):
     try: 
       completion = openai.ChatCompletion.create(
-      model="gpt-4.1-nano", 
+      model="gpt-4o-mini", 
       messages=[{"role": "user", "content": prompt}]
       )
       print(completion)
@@ -434,7 +434,7 @@ def GPT4_request_t1(prompt):
 
     try:
         completion = openai.ChatCompletion.create(
-            model="gpt-4.1-nano",
+            model="gpt-4o-mini",
             messages=[{"role": "user", "content": prompt}],
             temperature=1
         )
@@ -484,7 +484,7 @@ def ChatGPT_request_t0(prompt):
     # temp_sleep()
     try:
         completion = openai.ChatCompletion.create(
-            model="gpt-4.1-nano",
+            model="gpt-4o-mini",
             messages=[{"role": "user", "content": prompt}],
             temperature=0
         )

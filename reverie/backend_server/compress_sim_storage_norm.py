@@ -40,7 +40,7 @@ def ChatGPT_request(prompt):
     # temp_sleep()
     try:
         completion = openai.ChatCompletion.create(
-            model="gpt-4.1-nano",
+            model="gpt-4o-mini",
             messages=[{"role": "user", "content": prompt}]
         )
         print(completion)
@@ -107,7 +107,7 @@ def run_gpt_prompt_pronunciatio_for_chat(action_description, persona, chat, exam
 
 
     print("asdhfapsh8p9hfaiafdsi;ldfj as DEBUG 4")  ########
-    gpt_param = {"engine": "gpt-4.1-nano", "max_tokens": 15,
+    gpt_param = {"engine": "gpt-4o-mini", "max_tokens": 15,
                  "temperature": 0, "top_p": 1, "stream": False,
                  "frequency_penalty": 0, "presence_penalty": 0, "stop": None}
     prompt_template = "norm/other_prompt/generate_pronunciatio_v2.txt"  ########
