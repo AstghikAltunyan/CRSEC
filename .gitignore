@@ -1,4 +1,5 @@
 environment/frontend_server/storage/*
+!environment/frontend_server/storage/base_the_ville_n10
 *.pyc
 .DS_Store
 
