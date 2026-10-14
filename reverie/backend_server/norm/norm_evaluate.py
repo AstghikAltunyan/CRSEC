@@ -535,12 +535,14 @@ def norm_evaluate_check(norm, persona, personas, long_term_tag=False):
     # Type Check
     type_tag = generate_seeds_type_check_v2(new_norm)
     if len(type_tag) != 2:
+        norm.poignancy = -5   # rejected: not a norm / type check failed
         return False, new_norm
     new_norm.type = type_tag[1]
     norm.type = new_norm.type
 
     # Conflict Check
     if generate_recognize_conflict_check(new_norm, persona):
+        norm.poignancy = -6   # rejected: conflicts with an active norm
         return False, new_norm
 
     # long_term_norm
@@ -560,6 +562,7 @@ def norm_evaluate_check(norm, persona, personas, long_term_tag=False):
     # normal norm
     utility = generate_normal_norm_utility(new_norm, persona)
     if len(utility) != 2:
+        norm.poignancy = -7   # rejected: utility could not be scored
         return False, new_norm
     new_norm.poignancy = utility[0]
     new_norm.poi_reason = utility[1]

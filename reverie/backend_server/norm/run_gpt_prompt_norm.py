@@ -1,4 +1,5 @@
 import sys
+import re
 
 sys.path.append('../')
 from persona.prompt_template.gpt_structure import *
@@ -714,6 +715,26 @@ def run_gpt_active_norms_classfication_v2(curr_active_norms, verbose=False):
         print_run_prompts_norm(prompt_template, gpt_param, prompt_input, prompt, output)
     return output, [output, prompt, gpt_param, prompt_input, fail_safe]
 
+def _parse_type_check(r):
+    """Read the type-check answer, accepting small format variations."""
+    s1 = re.search(r'STEP\s*1\s*:\s*<?\s*"?\s*(yes|no)\b', r, re.I)
+    s2 = re.search(r'STEP\s*2\s*:\s*<?\s*"?\s*(incorrect|correct)\b', r, re.I)
+    t = re.search(r'type\s+classification\s+for\s+INPUT\s+is\s*<?\s*"?\s*(descriptive|injunctive)\b', r, re.I)
+    if not s1:
+        return None
+    if s1.group(1).lower() == "no":
+        return ["no", "incorrect", "descriptive"]
+    if not t:
+        return None
+    return ["yes", s2.group(1).lower() if s2 else "correct", t.group(1).lower()]
+
+
+def _parse_yes_no_answer(r):
+    """Read 'Answer: yes/no', accepting small format variations."""
+    m = re.search(r'answer\s*:\s*[<"*\s]*(yes|no)\b', r, re.I)
+    if not m:
+        m = re.match(r'\s*[<"*]*(yes|no)\b', r, re.I)
+    return m.group(1).lower() if m else None
 
 def run_gpt_seeds_type_check_v2(candidate_norm, norm_type, verbose=False):
     def create_prompt_input(candidate_norm, norm_type):
@@ -723,21 +744,10 @@ def run_gpt_seeds_type_check_v2(candidate_norm, norm_type, verbose=False):
 
     def __func_clean_up(gpt_response, prompt=""):
         print(gpt_response)
-        x1 = gpt_response.split('STEP 1: <"')[-1].split('"')[0].lower()
-        x2 = gpt_response.split('STEP 2: <"')[-1].split('"')[0].lower()
-        x3 = gpt_response.split('The type classification for INPUT is <"')[-1].split('"')[0].lower()
-        return [x1, x2, x3]
+        return _parse_type_check(gpt_response)
 
     def __func_validate(gpt_response, prompt=""):
-        try:
-            if gpt_response.split('STEP 1: <"')[-1].split('"')[0].lower() in ['yes', 'no'] and \
-                    gpt_response.split('STEP 2: <"')[-1].split('"')[0].lower() in ['incorrect', 'correct'] and \
-                    gpt_response.split('The type classification for INPUT is <"')[-1].split('"')[0].lower() in [
-                'descriptive', 'injunctive']:
-                return True
-            return False
-        except:
-            return False
+        return _parse_type_check(gpt_response) is not None
 
     def get_fail_safe():
         return ["I am hungry"]
@@ -765,16 +775,10 @@ def run_gpt_norm_recognize_conflict_check(candidate_norm, curr_active_norms, ver
 
     def __func_clean_up(gpt_response, prompt=""):
         print(gpt_response)
-        x1 = gpt_response.split('Answer: ')[-1].split('.')[0].lower()
-        return x1
+        return _parse_yes_no_answer(gpt_response)
 
     def __func_validate(gpt_response, prompt=""):
-        try:
-            if gpt_response.split('Answer: ')[-1].split('.')[0].lower() in ['yes', 'no']:
-                return True
-            return False
-        except:
-            return False
+        return _parse_yes_no_answer(gpt_response) is not None
 
     def get_fail_safe():
         return False
