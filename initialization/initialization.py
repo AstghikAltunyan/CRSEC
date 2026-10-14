@@ -78,8 +78,13 @@ def run_randomization(n_activists, seed=None):
         counts = df["Archetype"].value_counts()
         activists = df[df["Archetype"] == ACTIVIST]
         others = [counts.get(a, 0) for a in OTHER_ARCHETYPES]
+        strong = (
+            (activists["Conviction"] >= 0.7).all()
+            and (activists["Trust"] <= -0.7).all()
+        )
         if (
             len(activists) == n_activists
+            and strong
             and "Jennifer Moore" not in activists["Agent"].values
             and max(others) - min(others) <= 1
         ):
