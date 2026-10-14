@@ -20,15 +20,9 @@ def run_gpt_prompt_decide_if_norm_conflict(target_person_description, init_perso
         return prompt_input
 
     def _parse_final_output(gpt_response):
-        """Extract FINAL OUTPUT yes/no; lenient parsing for model format variation."""
-        r = gpt_response.lower()
-        for marker in ["final output:", "final output"]:
-            if marker in r:
-                rest = r.split(marker, 1)[-1].strip()
-                first_word = rest.split()[0] if rest.split() else ""
-                if first_word in ("yes", "no"):
-                    return first_word
-        return None
+        """Extract FINAL OUTPUT yes/no, tolerating **bold**, [brackets], quotes and punctuation."""
+        m = re.search(r'final\s*output\W*(yes|no)\b', gpt_response, re.I)
+        return m.group(1).lower() if m else None
 
     def _parse_conflict_answer(gpt_response):
         """Extract first question yes/no (conflict); lenient parsing."""
@@ -57,6 +51,7 @@ def run_gpt_prompt_decide_if_norm_conflict(target_person_description, init_perso
             conflict = _parse_conflict_answer(gpt_response)
             if final is not None and conflict is not None:
                 return True
+            print("UNPARSEABLE conflict-check reply:", gpt_response[:500])
             return False
         except Exception:
             return False
