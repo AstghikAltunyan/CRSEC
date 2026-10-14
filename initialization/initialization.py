@@ -62,7 +62,7 @@ def run_randomization():
         df = assign_profiles()
         activists = df[df["Archetype"] == "Grassroots Activist / Dissenter"]
         # Constraint: exactly 2 grassroots activists, and Jennifer Moore cannot be one.
-        if len(activists) == 2 and "Jennifer Moore" not in activists["Agent"].values:
+        if len(activists) == 0:
             break
 
     print("\nFinal assignment:")

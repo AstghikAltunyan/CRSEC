@@ -24,16 +24,16 @@ import pandas as pd
 
 # Initial (round 0) conviction (urgency) and trust per agent; used as first point in plots.
 ROUND_ZERO_INITIAL = [
-    ("Mary Smith", 0.94, -0.93),
-    ("Bob Johnson", -0.30, -0.96),
-    ("Robert Brown", -0.35, -0.86),
-    ("David Evans", 0.98, 0.03),
-    ("Linda Taylor", -0.22, -0.73),
-    ("Jennifer Moore", -0.14, 0.27),
-    ("Sam Moore", 0.64, 0.75),
-    ("Sarah Taylor", -0.36, 0.46),
-    ("Tom Brown", 0.07, 0.63),
-    ("Andrew Williams", -0.05, -0.28),
+    ("Mary Smith", 0.12, 0.82),
+    ("Bob Johnson", -0.11, -0.71),
+    ("Robert Brown", 0.83, 0.97),
+    ("David Evans", -0.71, 0.12),
+    ("Linda Taylor", 0.24, 0.88),
+    ("Jennifer Moore", -0.29, 0.02),
+    ("Sam Moore", -0.87, -0.26),
+    ("Sarah Taylor", -0.63, 0.97),
+    ("Tom Brown", -0.86, -0.60),
+    ("Andrew Williams", -0.62, 0.80),
 ]
 
 

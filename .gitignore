@@ -10,3 +10,4 @@ environment/frontend_server/storage/*
 
 # Optional: local overrides (uncomment if you use a private local file)
 # reverie/backend_server/utils_local.py
+*.tar.gz
