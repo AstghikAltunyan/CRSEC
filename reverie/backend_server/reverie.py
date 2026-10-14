@@ -71,29 +71,38 @@ class ReverieServer:
     sim_folder = f"{fs_storage}/{self.sim_code}"
 
     if resume:
-      # RESUME: open existing simulation without copying. Infer step from movement files.
+      # RESUME: continue from the last SAVED state (reverie/meta.json),
+      # not from the last movement file, so step, time and memories line up.
       if not os.path.isdir(sim_folder):
         raise FileNotFoundError(f"Cannot resume: simulation folder not found: {sim_folder}")
       with open(f"{sim_folder}/reverie/meta.json") as json_file:
         reverie_meta = json.load(json_file)
       self.fork_sim_code = reverie_meta.get("fork_sim_code", "")
-      last_step = _get_last_completed_step(sim_folder)
-      if last_step < 0:
-        raise ValueError(f"Cannot resume: no movement files in {sim_folder}/movement/")
-      # Next step to run is last_step + 1
-      self.step = last_step + 1
-      reverie_meta["step"] = self.step
-      sec_per_step = reverie_meta['sec_per_step']
+      self.step = reverie_meta["step"]
+      sec_per_step = reverie_meta["sec_per_step"]
       self.start_time = datetime.datetime.strptime(
                           f"{reverie_meta['start_date']}, 00:00:00",
                           "%B %d, %Y, %H:%M:%S")
-      self.curr_time = self.start_time + datetime.timedelta(seconds=(last_step + 1) * sec_per_step)
-      reverie_meta["curr_time"] = self.curr_time.strftime("%B %d, %Y, %H:%M:%S")
-      with open(f"{sim_folder}/reverie/meta.json", "w") as outfile:
-        outfile.write(json.dumps(reverie_meta, indent=2))
-      init_env_file = f"{sim_folder}/environment/{last_step}.json"
+      # Use the saved clock time (keeps a 9:00 start instead of resetting to midnight)
+      self.curr_time = datetime.datetime.strptime(reverie_meta["curr_time"],
+                                                  "%B %d, %Y, %H:%M:%S")
+      # Move steps that ran after the last save into a side folder
+      aside = f"{sim_folder}/unsaved_after_step_{self.step}"
+      for sub, first in (("movement", self.step), ("environment", self.step + 1)):
+        for f in os.listdir(f"{sim_folder}/{sub}"):
+          if f.endswith(".json") and f[:-5].isdigit() and int(f[:-5]) >= first:
+            os.makedirs(f"{aside}/{sub}", exist_ok=True)
+            shutil.move(f"{sim_folder}/{sub}/{f}", f"{aside}/{sub}/{f}")
+      # Make sure the starting-positions file exists for the resume step
+      init_env_file = f"{sim_folder}/environment/{self.step}.json"
       if not check_if_file_exists(init_env_file):
-        raise FileNotFoundError(f"Cannot resume: missing {init_env_file}")
+        prev = json.load(open(f"{sim_folder}/movement/{self.step - 1}.json"))
+        env = {n: {"maze": reverie_meta["maze_name"],
+                   "x": p["movement"][0], "y": p["movement"][1]}
+               for n, p in prev["persona"].items()}
+        with open(init_env_file, "w") as f:
+          json.dump(env, f)
+      print(f"Resuming from saved step {self.step} at {self.curr_time}")
     else:
       # FORKING FROM A PRIOR SIMULATION:
       # <fork_sim_code> indicates the simulation we are forking from.
