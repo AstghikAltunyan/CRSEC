@@ -414,8 +414,9 @@ class ReverieServer:
       if int_counter == 0:
         try:
           self.save()
-        except Exception:
-          pass
+        except Exception as e:
+          print(f"!!! SAVE FAILED at step {self.step}: {e}")
+          traceback.print_exc()
         break
 
       # STANDALONE ENVIRONMENT GENERATION:
@@ -567,8 +568,9 @@ class ReverieServer:
           if self.step % 25 == 0:
             try:
               self.save()
-            except Exception:
-              pass  # Don't crash the run if save fails
+            except Exception as e:
+              print(f"!!! SAVE FAILED at step {self.step}: {e}")
+              traceback.print_exc()
 
           # Log progress every 100 steps
           if self.step % 100 == 0:
