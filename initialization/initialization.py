@@ -24,6 +24,13 @@ AGENTS = [
     "Andrew Williams",
 ]
 
+ACTIVIST = "Grassroots Activist / Dissenter"
+OTHER_ARCHETYPES = (
+    "Apathetic Cynic",
+    "Passive Conformist",
+    "Institutional Optimist / Policy Ally",
+)
+
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 
@@ -33,7 +40,7 @@ def classify(conviction, trust):
     elif conviction < 0.0 and trust >= 0.0:
         return "Passive Conformist"
     elif conviction >= 0.0 and trust < 0.0:
-        return "Grassroots Activist / Dissenter"
+        return ACTIVIST
     else:
         return "Institutional Optimist / Policy Ally"
 
@@ -53,26 +60,41 @@ def assign_profiles():
     return df
 
 
-def run_randomization():
-    seed = int(time.time())
+def run_randomization(n_activists, seed=None):
+    """
+    Re-draw stances until:
+      - exactly <n_activists> agents are Grassroots Activists (committed minority),
+      - Jennifer Moore (a child) is not an activist,
+      - the other three archetypes are balanced (their counts differ by at most 1).
+    """
+    if seed is None:
+        seed = int(time.time())
     np.random.seed(seed)
     print("Seed used for this run:", seed)
+    print("Number of committed-minority agents (activists):", n_activists)
 
     while True:
         df = assign_profiles()
-        activists = df[df["Archetype"] == "Grassroots Activist / Dissenter"]
-        # Constraint: exactly 2 grassroots activists, and Jennifer Moore cannot be one.
-        if len(activists) == 0:
+        counts = df["Archetype"].value_counts()
+        activists = df[df["Archetype"] == ACTIVIST]
+        others = [counts.get(a, 0) for a in OTHER_ARCHETYPES]
+        if (
+            len(activists) == n_activists
+            and "Jennifer Moore" not in activists["Agent"].values
+            and max(others) - min(others) <= 1
+        ):
             break
 
     print("\nFinal assignment:")
     print(df.to_string(index=False))
-    print("\nGrassroots activists selected:")
-    print(activists[["Agent", "Conviction", "Trust"]].to_string(index=False))
+    if n_activists:
+        print("\nGrassroots activists selected:")
+        print(activists[["Agent", "Conviction", "Trust"]].to_string(index=False))
 
     output_path = os.path.join(BASE_DIR, "bio-initialization.txt")
     with open(output_path, "w", encoding="utf-8") as f:
-        f.write(f"Seed used for this run: {seed}\n\n")
+        f.write(f"Seed used for this run: {seed}\n")
+        f.write(f"Committed-minority agents (activists): {n_activists}\n\n")
         f.write("Final assignment:\n")
         f.write(df.to_string(index=False))
         f.write("\n")
@@ -97,7 +119,9 @@ def _extract_json_object(text: str):
 
 def _build_prompt(base_scratch, info_text, stance_row):
     return f"""
-Edit those biographies based on the language of the papers I provided and the the information summarized. Because the factors in my experiment are the level of conviction about climate change and the trust in government, make sure to explicitly mention the conviction and trust levels for each agent in the "learned" category. Change only "innate" and "learned" categories, and the "currently" category to make them aligned with our  climate change opinion experiment, but do not change the format, only the content. Here is a table indicating the agents’ stance on the scale from -1 to 1. Make sure the language reflects the agent's numerical value of the attitude, but do not include the value in the updated biography.
+Edit those biographies based on the language of the papers I provided and the the information summarized. Because the factors in my experiment are the level of conviction about climate change and the trust in government, make sure to explicitly mention the conviction and trust levels for each agent in the "learned" category. Change only "innate", "learned", "currently" and "daily_plan_req" categories to make them aligned with our  climate change opinion experiment, but do not change the format, only the content. Here is a table indicating the agents’ stance on the scale from -1 to 1. Make sure the language reflects the agent's numerical value of the attitude, but do not include the value in the updated biography.
+
+For "daily_plan_req": keep its first sentence about when and where the agent is active exactly as it is, and rewrite only the rest so that the agent's plan for February 13, 2023 (including any talk, performance or event title) is consistent with the agent's new "learned" and "currently" text.
 
 Stance for this agent:
 - Agent: {stance_row["Agent"]}
@@ -112,12 +136,14 @@ Current biography fields:
 - innate: {base_scratch.get("innate", "")}
 - learned: {base_scratch.get("learned", "")}
 - currently: {base_scratch.get("currently", "")}
+- daily_plan_req: {base_scratch.get("daily_plan_req", "")}
 
 Return JSON only with exactly these keys:
 {{
   "innate": "<new innate text>",
   "learned": "<new learned text>",
-  "currently": "<new currently text>"
+  "currently": "<new currently text>",
+  "daily_plan_req": "<new daily_plan_req text>"
 }}
 """
 
@@ -167,6 +193,9 @@ def _call_model(prompt_text, model_name):
             ) from exc
 
 
+BIO_FIELDS = ("innate", "learned", "currently", "daily_plan_req")
+
+
 def update_biographies(df, information_path, base_storage_dir, model_name):
     with open(information_path, "r", encoding="utf-8") as f:
         info_text = f.read().strip()
@@ -178,9 +207,7 @@ def update_biographies(df, information_path, base_storage_dir, model_name):
         raise FileNotFoundError(f"No scratch.json found under: {base_storage_dir}")
 
     stance_map = {row["Agent"]: row for _, row in df.iterrows()}
-    grassroots_set = set(
-        df[df["Archetype"] == "Grassroots Activist / Dissenter"]["Agent"].tolist()
-    )
+    grassroots_set = set(df[df["Archetype"] == ACTIVIST]["Agent"].tolist())
     updated = 0
     skipped = []
     updated_bios = []
@@ -200,7 +227,7 @@ def update_biographies(df, information_path, base_storage_dir, model_name):
         if not payload:
             raise ValueError(f"Model returned non-JSON output for {name}: {raw[:300]}")
 
-        for key in ("innate", "learned", "currently"):
+        for key in BIO_FIELDS:
             if key not in payload:
                 raise ValueError(f"Missing '{key}' in model output for {name}.")
             scratch[key] = str(payload[key]).strip()
@@ -210,15 +237,8 @@ def update_biographies(df, information_path, base_storage_dir, model_name):
         # - everyone else -> citizen
         scratch["identity"] = "entrepreneur" if name in grassroots_set else "citizen"
 
-        updated_bios.append(
-            {
-                "name": name,
-                "innate": scratch["innate"],
-                "learned": scratch["learned"],
-                "currently": scratch["currently"],
-                "identity": scratch["identity"],
-            }
-        )
+        updated_bios.append({"name": name, "identity": scratch["identity"],
+                             **{k: scratch[k] for k in BIO_FIELDS}})
 
         with open(scratch_path, "w", encoding="utf-8") as f:
             json.dump(scratch, f, ensure_ascii=False, indent=2)
@@ -238,15 +258,26 @@ def update_biographies(df, information_path, base_storage_dir, model_name):
         for row in sorted(updated_bios, key=lambda x: x["name"]):
             f.write(f"Agent: {row['name']}\n")
             f.write(f"identity: {row['identity']}\n")
-            f.write(f"innate: {row['innate']}\n")
-            f.write(f"learned: {row['learned']}\n")
-            f.write(f"currently: {row['currently']}\n")
+            for k in BIO_FIELDS:
+                f.write(f"{k}: {row[k]}\n")
             f.write("-" * 80 + "\n")
 
 
 def main():
     parser = argparse.ArgumentParser(
         description="Initialize random ideology stances and rewrite base biographies."
+    )
+    parser.add_argument(
+        "--n-activists",
+        type=int,
+        required=True,
+        help="Number of committed-minority agents (Grassroots Activists): 0 for the null condition, 1 for 1CM, 2 for 2CM.",
+    )
+    parser.add_argument(
+        "--seed",
+        type=int,
+        default=None,
+        help="Random seed (default: current time). Pass a seed to reproduce an assignment.",
     )
     parser.add_argument(
         "--information-file",
@@ -267,13 +298,14 @@ def main():
     )
     args = parser.parse_args()
 
-    _seed, df = run_randomization()
+    _seed, df = run_randomization(args.n_activists, args.seed)
     update_biographies(
         df=df,
         information_path=args.information_file,
         base_storage_dir=os.path.abspath(args.base_storage_dir),
         model_name=args.model,
     )
+    print("\nNext: run install_seed_norms.py to set up norms for the entrepreneurs.")
 
 
 if __name__ == "__main__":
