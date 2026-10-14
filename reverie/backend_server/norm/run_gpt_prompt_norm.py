@@ -6,6 +6,25 @@ from persona.prompt_template.gpt_structure import *
 from persona.prompt_template.print_prompt import *
 from norm.print_prompt_norm import *
 
+def _parse_conflict_reply(r):
+    """Return (final, conflict) as 'yes'/'no' (or None if unreadable).
+    conflict = Question 1 answer; final = FINAL OUTPUT if present,
+    else the Question 2 answer, else 'no' when Question 1 is 'no'."""
+    answers = re.findall(r'\b(yes|no)\b\W{0,3}//', r, re.I)
+    if not answers:
+        answers = re.findall(r'(?:answer[^:\n]*:|^)\s*[\[\(<"*\s]*(yes|no)\b', r, re.I | re.M)
+    answers = [a.lower() for a in answers]
+    conflict = answers[0] if answers else None
+    m = re.search(r'final\s*output\W*(yes|no)\b', r, re.I)
+    if m:
+        final = m.group(1).lower()
+    elif len(answers) >= 2:
+        final = answers[1]
+    elif conflict == 'no':
+        final = 'no'
+    else:
+        final = None
+    return final, conflict
 
 def run_gpt_prompt_decide_if_norm_conflict(target_person_description, init_persona_norms, target_p, init_p_identity,
                                            init_p_innate, verbose=False):
@@ -46,20 +65,15 @@ def run_gpt_prompt_decide_if_norm_conflict(target_person_description, init_perso
         return None
 
     def __func_validate(gpt_response, prompt=""):
-        try:
-            final = _parse_final_output(gpt_response)
-            conflict = _parse_conflict_answer(gpt_response)
-            if final is not None and conflict is not None:
-                return True
-            print("UNPARSEABLE conflict-check reply:", gpt_response[:500])
-            return False
-        except Exception:
-            return False
+        final, conflict = _parse_conflict_reply(gpt_response)
+        if final is not None and conflict is not None:
+            return True
+        print("UNPARSEABLE conflict-check reply:", gpt_response)
+        return False
 
     def __func_clean_up(gpt_response, prompt=""):
-        final = _parse_final_output(gpt_response) or "no"
-        conflict = _parse_conflict_answer(gpt_response) or "no"
-        return [final, gpt_response, conflict]
+        final, conflict = _parse_conflict_reply(gpt_response)
+        return [final or "no", gpt_response, conflict or "no"]
 
     def get_fail_safe():
         fs = "ERROR"
