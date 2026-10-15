@@ -1,0 +1,67 @@
+{
+  "norm_1": {
+    "ID": 1,
+    "type": "injunctive",
+    "content": "Communities must take urgent action on climate change.",
+    "subject": "communities",
+    "predicate": "must take",
+    "object": "urgent action on climate change",
+    "related_desc": "",
+    "utility": 85,
+    "poi_reason": "researcher-designed seed norm",
+    "activation_state": true,
+    "validity_state": true
+  },
+  "norm_2": {
+    "ID": 2,
+    "type": "injunctive",
+    "content": "Cleanliness and sustainability practices should be encouraged in public spaces.",
+    "subject": "cleanliness and sustainability practices",
+    "predicate": "should be encouraged",
+    "object": "in public spaces",
+    "related_desc": "",
+    "utility": 75,
+    "poi_reason": "researcher-designed seed norm",
+    "activation_state": true,
+    "validity_state": true
+  },
+  "norm_3": {
+    "ID": 3,
+    "type": "descriptive",
+    "content": "Everyone engages in activities that raise awareness about climate change and its impacts on health and the environment.",
+    "subject": "everyone",
+    "predicate": "engages in",
+    "object": "activities that raise awareness about climate change and its impacts on health and the environment",
+    "related_desc": "",
+    "utility": 85,
+    "poi_reason": "researcher-designed seed norm",
+    "activation_state": true,
+    "validity_state": true
+  },
+  "norm_4": {
+    "ID": 4,
+    "type": "injunctive",
+    "content": "Government cannot be trusted to tackle climate change.",
+    "subject": "government",
+    "predicate": "cannot be trusted",
+    "object": "to tackle climate change",
+    "related_desc": "",
+    "utility": 85,
+    "poi_reason": "researcher-designed seed norm",
+    "activation_state": true,
+    "validity_state": true
+  },
+  "norm_5": {
+    "ID": 5,
+    "type": "descriptive",
+    "content": "Most residents rely on communities rather than institutions for climate commitments.",
+    "subject": "most residents",
+    "predicate": "rely on",
+    "object": "communities rather than institutions for climate commitments",
+    "related_desc": "",
+    "utility": 70,
+    "poi_reason": "researcher-designed seed norm",
+    "activation_state": true,
+    "validity_state": true
+  }
+}
